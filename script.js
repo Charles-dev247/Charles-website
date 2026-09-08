@@ -178,42 +178,63 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // 6. Contact Form Submission Handling
+    // 6. Contact Form Submission Handling (to charles247chinedu@gmail.com)
     // ==========================================
     const contactForm = document.getElementById('contact-form');
     const formStatus = document.getElementById('form-status');
 
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
+            const senderName = document.getElementById('name').value;
             
             // Animation state
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending Message...';
             submitBtn.style.opacity = '0.7';
+            formStatus.style.display = 'none';
 
-            // Simulate server network request latency
-            setTimeout(() => {
+            try {
+                const formData = new FormData(contactForm);
+                const response = await fetch('https://formsubmit.co/ajax/charles247chinedu@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const result = await response.json().catch(() => ({}));
+
+                if (response.ok && result.success !== 'false') {
+                    // Display success response
+                    formStatus.className = 'form-status success';
+                    formStatus.textContent = `Thank you, ${senderName}! Your message was successfully sent to Charles's inbox.`;
+                    formStatus.style.display = 'block';
+                    
+                    // Clear inputs
+                    contactForm.reset();
+                } else {
+                    throw new Error(result.message || 'Submission failed');
+                }
+            } catch (error) {
+                // Display error response
+                formStatus.className = 'form-status error';
+                formStatus.textContent = 'Something went wrong. Please try again or email directly at charles247chinedu@gmail.com';
+                formStatus.style.display = 'block';
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
                 submitBtn.style.opacity = '1';
 
-                // Display success response
-                formStatus.className = 'form-status success';
-                formStatus.textContent = 'Thank you, ' + document.getElementById('name').value + '! Your message was successfully sent.';
-                
-                // Clear inputs
-                contactForm.reset();
-
-                // Clear feedback status after 5 seconds
+                // Clear feedback status after 6 seconds
                 setTimeout(() => {
                     formStatus.style.display = 'none';
-                }, 5000);
-
-            }, 1500);
+                }, 6000);
+            }
         });
     }
 });

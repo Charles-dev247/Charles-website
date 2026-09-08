@@ -740,18 +740,35 @@ header {
   text-decoration: none;
   transition: var(--transition);
   background-color: var(--bg-card);
+  overflow: hidden;
 }
 
 .social-icon:hover {
   color: var(--accent);
   border-color: var(--accent);
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(var(--accent-rgb), 0.1);
+  box-shadow: 0 5px 15px rgba(var(--accent-rgb), 0.15);
 }
 
 .social-icon svg {
   width: 20px;
   height: 20px;
+}
+
+.social-icon img,
+.social-icon .social-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 50%;
+  display: block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.social-icon:hover img,
+.social-icon:hover .social-img {
+  transform: scale(1.12);
 }
 
 /* Contact Form */
